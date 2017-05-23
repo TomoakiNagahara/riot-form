@@ -1,8 +1,8 @@
 <?php
 /**
- * riot-form:/index.php
+ * riot-form:/css/index.php
  *
- * @creation  2017-04-08
+ * @creation  2017-05-24
  * @version   1.0
  * @package   riot-form
  * @author    Tomoaki Nagahara <tomoaki.nagahara@gmail.com>
@@ -10,10 +10,10 @@
  */
 
 //	...
-$extension = 'riot';
+$extension = 'css';
 
 //	...
-$files = array('text','textarea','radio','checkbox','select','pre');
+$files = array('riot');
 
 //	...
-include(__DIR__.'/webpack.php');
+include(__DIR__.'/../webpack.php');

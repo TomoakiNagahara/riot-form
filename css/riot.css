@@ -1,0 +1,12 @@
+/**
+ * riot-form.css
+ */
+
+div.riot .error {
+	color: #f03030;
+	background-color: #ffdfdf;
+}
+
+div.riot .change:not(.error) {
+	background-color: #fcfc9c;
+}
