@@ -5,7 +5,7 @@
 	}
 	</style>
 	<script>
-	this.opts.content = this.opts.content.replace(/\n/g, '<br/>');
+	this.opts.content = this.opts.content ? this.opts.content.replace(/\n/g, '<br/>'): '';
 	this.root.innerHTML = '<div class="pre">' + this.opts.content + '</div>';
 	</script>
 </riot-form-pre>
