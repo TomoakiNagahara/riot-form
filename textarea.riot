@@ -1,23 +1,33 @@
 <riot-form-textarea>
-	<textarea name="{ parent.opts.name }" onChange={ onChange }>{ value }</textarea>
+	<textarea name="{ parent.opts.name }" class="{ error ? 'error':'' } { fixed !== value ? 'change':'' }" onChange={ onChange }>{ value }</textarea>
 	<style scoped>
 	:scope textarea {
 	}
 	</style>
 	<script>
 	//	...
-	this.value = opts.default ? opts.default: null;
+	this.error = null;
+	this.value = this.opts.value ? this.opts.value: null;
+	this.fixed = this.opts.value ? this.opts.value : null;
 
 	//	...
 	onChange(e){
 		var key = $(e.target).prop('name');
 		var val = $(e.target).val();
 		obs.trigger('form', this.opts.form, this.opts.name, val, 'change');
+
+		//	...
+		this.value = val;
 	};
 
 	//	...
 	onSet(value){
 		this.value = value;
+
+		//	...
+		if( this.fixed === null ){
+			this.fixed = this.value;
+		}
 	};
 
 	//	...
@@ -26,7 +36,15 @@
 		obs.on('form', function(form_name, input_name, value, modifier){
 			if( form_name === self.opts.form ){
 				if( input_name === self.opts.name ){
-					if( modifier === 'set' ){ self.onSet(value); };
+					switch( modifier ){
+						case 'set':
+							self.onSet(value);
+							break;
+
+						case 'error':
+							self.error = value ? true: false;
+							break;
+					}
 				}
 			}
 		});
