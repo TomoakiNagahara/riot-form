@@ -1,0 +1,56 @@
+<riot-form-submit>
+	<button class="button" onclick={ onClick } disabled={ count === 0 }>
+		{ value }
+	</button>
+	<script>
+	//	...
+	if( !this.opts.form || !this.opts.name ){
+		alert('Empty form name or submit button name. (riot/form/submit.riot)');
+	}
+
+	//	...
+	this.form  = this.opts.form;
+	this.name  = this.opts.name;
+	this.value = this.opts.value;
+	this.count = 0;
+	this.post  = {};
+
+	//	...
+	onClick(){
+		obs.trigger('form', this.form, null, null, 'submit');
+	};
+
+	//	...
+	obs(){
+		var self = this;
+		obs.on('form', function(form, name, value, modifier){
+			if( form !== self.form ){
+				return;
+			}
+
+			//	...
+			if( name !== self.name ){
+				if( modifier === 'change' ){
+					self.post[name] = value;
+					setTimeout(function(){
+						var $temp = $('form[name="'+self.form+'"] .change');
+						self.count = $temp.length;
+						self.update();
+					}, 200);
+				}
+				return;
+			}
+
+			//	...
+			if( modifier === 'submit' && value === true ){
+				for(var name in self.post ){
+					obs.trigger('form', self.form, name, true, 'submit');
+				}
+			}
+		});
+	};
+
+	//	...
+	setTimeout(this.obs, 0);
+	</script>
+</riot-form-submit>

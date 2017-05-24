@@ -43,7 +43,11 @@
 			if( form_name === self.opts.form ){
 				if( input_name === self.opts.name ){
 					if( modifier === 'set' ){
+						if( value === null ){
+							//	...
+						}else
 						if( typeof value === 'object' ){
+							console.log('values?', value);
 							self.values = value;
 						}else{
 							self.select = value;

@@ -6,9 +6,17 @@
 	</style>
 	<script>
 	//	...
-	this.error = null;
-	this.value = this.opts.value ? this.opts.value: null;
+	if( !this.opts.form || !this.opts.name ){
+		console.log('Empty form name or textarea name.', this.opts);
+		return;
+	}
+
+	//	...
+	this.form  = this.opts.form;
+	this.name  = this.opts.name;
+	this.value = this.opts.value ? this.opts.value : null;
 	this.fixed = this.opts.value ? this.opts.value : null;
+	this.error = null;
 
 	//	...
 	onChange(e){
@@ -21,32 +29,36 @@
 	};
 
 	//	...
-	onSet(value){
-		this.value = value;
-
-		//	...
-		if( this.fixed === null ){
-			this.fixed = this.value;
-		}
-	};
-
-	//	...
 	obs(){
 		var self = this;
-		obs.on('form', function(form_name, input_name, value, modifier){
-			if( form_name === self.opts.form ){
-				if( input_name === self.opts.name ){
-					switch( modifier ){
-						case 'set':
-							self.onSet(value);
-							break;
-
-						case 'error':
-							self.error = value ? true: false;
-							break;
-					}
-				}
+		obs.on('form', function(form, name, value, modifier){
+			//	...
+			if( form !== self.form || name !== self.name ){
+				return;
 			}
+
+			//	...
+			switch( modifier ){
+				case 'set':
+					self.value = value;
+					if( self.fixed === null ){
+						self.fixed = self.value;
+					}
+					break;
+
+				case 'error':
+					self.error = value ? true: false;
+					break;
+
+				case 'submit':
+					if( value === true ){
+						self.fixed = self.value;
+					}
+					break;
+			}
+
+			//	...
+			self.update();
 		});
 	};
 
