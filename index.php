@@ -13,7 +13,7 @@
 $extension = 'riot';
 
 //	...
-$files = array('text','textarea','radio','checkbox','select','pre');
+$files = array('text','textarea','radio','checkbox','select','message','pre');
 
 //	...
 include(__DIR__.'/webpack.php');
