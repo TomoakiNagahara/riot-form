@@ -1,0 +1,54 @@
+<riot-form-radio>
+	<label each={ values }>
+		<input type="radio" name={ parent.opts.name } value={ value } checked={ value === val } onclick={ onClick } />
+		{ label }
+	</label>
+	<style scoped>
+	:scope label,
+	:scope input[type="radio"] {
+		cursor: pointer;
+	}
+	:scope label {
+		margin-right: 0.5em;
+	}
+	:scope input[type="radio"] {
+		margin-right: 0.1em;
+	}
+	</style>
+	<script>
+	//	...
+	this.values = opts.values;
+	this.val    = __url.query.get(opts.name);
+	if(!this.val ){
+		this.val = opts['default'];
+	}
+
+	//	...
+	onClick(e){
+		//	...
+		var key = $(e.target).prop('name');
+		var val = $(e.target).val();
+
+		//	...
+		__url.query.set(key, val);
+
+		//	...
+		obs.trigger('form', opts.form, key, val);
+	};
+
+	//	...
+	obs(){
+		var self = this;
+		obs.on('form', function(form_name, input_name, value){
+			if( opts.form === form_name ){
+				if( opts.name === input_name ){
+					self.val = value;
+				}
+			}
+		});
+	};
+
+	//	...
+	setTimeout(this.obs, 0);
+	</script>
+</riot-form-radio>

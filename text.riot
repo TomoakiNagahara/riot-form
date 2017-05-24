@@ -1,0 +1,59 @@
+<riot-form-text>
+	<input type="{ this.type }" name="{ this.name }" value="{ this.value }" class="{ error ? 'error':'' } { this.fixed !== this.value ? 'change':'' }" onChange={ onChange } />
+	<style scoped>
+	:scope input[type="text"] {
+	}
+	</style>
+	<script>
+	//	...
+	this.type  = opts.type  ? opts.type  : 'text';
+	this.form  = opts.form  ? opts.form  : '';
+	this.name  = opts.name  ? opts.name  : '';
+	this.value = opts.value ? opts.value : null;
+	this.fixed = opts.value ? opts.value : null;
+	this.error = null;
+
+	//	...
+	onChange(e){
+		var key = $(e.target).prop('name');
+		var val = $(e.target).val();
+		obs.trigger('form', this.form, this.name, val, 'change');
+
+		//	...
+		this.value = val;
+	};
+
+	//	...
+	onSet(value){
+		this.value = value;
+
+		//	...
+		if( this.fixed === null ){
+			this.fixed = this.value;
+		}
+	};
+
+	//	...
+	obs(){
+		var self = this;
+		obs.on('form', function(form_name, input_name, value, modifier){
+			if( form_name === self.opts.form ){
+				if( input_name === self.opts.name ){
+					switch( modifier ){
+						case 'set':
+							self.onSet(value);
+							break;
+
+						case 'error':
+							self.error = value ? true: false;
+							break;
+					}
+				}
+			}
+		});
+	};
+
+	//	...
+	setTimeout(this.obs, 0);
+	</script>
+</riot-form-text>

@@ -1,0 +1,76 @@
+<riot-form-select>
+	<select name="{ name }" onChange={ onChange } class="{ is_error ? 'error':'' } { is_change ? 'change':'' }">
+		<option></option>
+		<option each={ values } value="{ value }" selected={ value === select }>{ label }</option>
+	</select>
+	<style>
+	</style>
+	<script>
+	//	...
+	if( !this.opts && !this.opts.form && !this.opts.name ){
+		console.log('empty form name and select name.');
+	}
+
+	//	...
+	if( typeof this.opts.value === 'undefined' ){
+		this.opts.value = null;
+	}
+
+	//	...
+	this.form   = this.opts.form;
+	this.name   = this.opts.name;
+	this.select = this.opts.value  ? this.opts.value : null;
+	this.values = this.opts.values ? this.opts.values: null;
+	this.is_error  = null;
+	this.is_change = null;
+
+	//	...
+	onChange(e){
+		var key = $(e.target).prop('name');
+		var val = $(e.target).val();
+
+		//	...
+		this.is_change = val !== this.opts.value ? true: false;
+
+		//	...
+		obs.trigger('form', this.opts.form, this.opts.name, val, 'change');
+	};
+
+	//	...
+	obs(){
+		var self = this;
+		obs.on('form', function(form_name, input_name, value, modifier){
+			if( form_name === self.opts.form ){
+				if( input_name === self.opts.name ){
+					if( modifier === 'set' ){
+						if( typeof value === 'object' ){
+							self.values = value;
+						}else{
+							self.select = value;
+							if( self.opts.value === null ){
+								self.opts.value = value;
+							}
+						}
+						self.update();
+					}else
+
+					if( modifier === 'error' ){
+						self.is_error = value ? true: false;
+					}
+				}
+			}
+		});
+	};
+
+	//	...
+	this.on('mount', function(){
+		var value = __url.query.get(this.opts.name);
+		if( value ){
+			this.select = value;
+		}
+	});
+
+	//	...
+	setTimeout(this.obs, 0);
+	</script>
+</riot-form-select>

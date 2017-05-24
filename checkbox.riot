@@ -1,0 +1,48 @@
+<riot-form-checkbox>
+	<label each={ values }>
+		<input type="checkbox" name={ parent.opts.name } value={ value } checked={ check } onclick={ onClick } />
+		{ label }
+	</label>
+	<style>
+	:scope label,
+	:scope input[type="checkbox"] {
+		cursor: pointer;
+	}
+	:scope input[type="checkbox"] {
+		margin-right: 0.1em;
+	}
+	</style>
+	<script>
+	//	...
+	this.values = opts.values ? opts.values: [];
+
+	//	...
+	onClick(e){
+		var key = $(e.target).prop('name');
+		var chc = $(e.target).prop('checked');
+		var val = chc ? $(e.target).val(): '';
+		obs.trigger('form', this.opts.form, this.opts.name, val, 'change');
+	};
+
+	//	...
+	obs(){
+		var self = this;
+		obs.on('form', function(form_name, input_name, value, modifier){
+			if( form_name === self.opts.form ){
+				if( input_name === self.opts.name ){
+					self.values.map(function(t){
+						if( t.value === value ){
+							t.check = true;
+						}else{
+							t.check = false;
+						}
+					});
+				}
+			}
+		});
+	};
+
+	//	...
+	setTimeout(this.obs, 0);
+	</script>
+</riot-form-checkbox>
