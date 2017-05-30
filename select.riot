@@ -1,5 +1,5 @@
 <riot-form-select>
-	<select name="{ name }" onChange={ onChange } class="{ is_error ? 'error':'' } { is_change ? 'change':'' }">
+	<select name="{ name }" onChange={ onChange } class="{ error ? 'error':'' } { select !== fixed ? 'change':'' }">
 		<option></option>
 		<option each={ values } value="{ value }" selected={ value === select }>{ label }</option>
 	</select>
@@ -21,8 +21,8 @@
 	this.name   = this.opts.name;
 	this.select = this.opts.value  ? this.opts.value : null;
 	this.values = this.opts.values ? this.opts.values: null;
-	this.is_error  = null;
-	this.is_change = null;
+	this.fixed  = this.select !== null ? select: null;
+	this.error  = null;
 
 	//	...
 	onChange(e){
@@ -30,7 +30,7 @@
 		var val = $(e.target).val();
 
 		//	...
-		this.is_change = val !== this.opts.value ? true: false;
+		this.select = val;
 
 		//	...
 		obs.trigger('form', this.opts.form, this.opts.name, val, 'change');
@@ -39,30 +39,48 @@
 	//	...
 	obs(){
 		var self = this;
-		obs.on('form', function(form_name, input_name, value, modifier){
-			if( form_name === self.opts.form ){
-				if( input_name === self.opts.name ){
-					if( modifier === 'set' ){
-						if( value === null ){
-							//	...
-						}else
-						if( typeof value === 'object' ){
-							console.log('values?', value);
-							self.values = value;
-						}else{
-							self.select = value;
-							if( self.opts.value === null ){
-								self.opts.value = value;
-							}
-						}
-						self.update();
-					}else
-
-					if( modifier === 'error' ){
-						self.is_error = value ? true: false;
-					}
-				}
+		obs.on('form', function(form, name, value, modifier){
+			//	...
+			if( form !== self.opts.form ){
+				return;
 			}
+
+			//	...
+			if( name !== self.opts.name ){
+				return;
+			}
+
+			//	...
+			switch( modifier ){
+				case 'set':
+					if( value === null ){
+						//	...
+					}else
+					if( typeof value === 'object' ){
+						self.values = value;
+					}else{
+						self.select = value;
+						if( self.fixed === null ){
+							self.fixed = value;
+						}
+					}
+					break;
+
+				case 'error':
+					self.error = value ? true: false;
+					break;
+
+				case 'submit':
+					if( value === true ){
+						self.fixed = self.select;
+					}
+					break;
+
+				default:
+					d(form, name, value, modifier);
+				return;
+			}
+			self.update();
 		});
 	};
 

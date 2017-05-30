@@ -17,7 +17,7 @@
 
 	//	...
 	onClick(){
-		obs.trigger('form', this.form, null, null, 'submit');
+		obs.trigger('form', this.form, this.name, true, 'submit');
 	};
 
 	//	...
@@ -42,7 +42,8 @@
 			}
 
 			//	...
-			if( modifier === 'submit' && value === true ){
+			if( modifier === 'result' && value === true ){
+				self.count = 0;
 				for(var name in self.post ){
 					obs.trigger('form', self.form, name, true, 'submit');
 				}

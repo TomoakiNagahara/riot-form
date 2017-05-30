@@ -1,14 +1,18 @@
 <riot-form-text>
-	<input type="{ this.type }" name="{ this.name }" value="{ this.value }" class="{ error ? 'error':'' } { this.fixed !== this.value ? 'change':'' }" onChange={ onChange } />
+	<input type="{ this.type }" name="{ this.name }" value="{ this.value }" class="{ error ? 'error':'' } { ( error !== true && this.fixed !== this.value) ? 'change':'' }" onChange={ onChange } />
 	<style scoped>
 	:scope input[type="text"] {
 	}
 	</style>
 	<script>
+	if( !this.opts.form || !this.opts.name ){
+		alert("text.riot is form name or input name has not been set.");
+	}
+
 	//	...
+	this.form  = this.opts.form;
+	this.name  = this.opts.name;
 	this.type  = this.opts.type  ? this.opts.type  : 'text';
-	this.form  = this.opts.form  ? this.opts.form  : '';
-	this.name  = this.opts.name  ? this.opts.name  : '';
 	this.value = this.opts.value ? this.opts.value : null;
 	this.fixed = this.opts.value ? this.opts.value : null;
 	this.error = null;
@@ -36,20 +40,39 @@
 	//	...
 	obs(){
 		var self = this;
-		obs.on('form', function(form_name, input_name, value, modifier){
-			if( form_name === self.opts.form ){
-				if( input_name === self.opts.name ){
-					switch( modifier ){
-						case 'set':
-							self.onSet(value);
-							break;
-
-						case 'error':
-							self.error = value ? true: false;
-							break;
-					}
-				}
+		obs.on('form', function(form, name, value, modifier){
+			//	...
+			if( form !== self.opts.form ){
+				return;
 			}
+
+			//	...
+			if( name !== self.opts.name ){
+				return;
+			}
+
+			//	...
+			switch( modifier ){
+				case 'set':
+					self.onSet(value);
+					break;
+
+				case 'error':
+					self.error = value ? true: false;
+					break;
+
+				case 'submit':
+					if( value === true ){
+						self.fixed = self.value;
+					}
+					break;
+
+				default:
+					d(form, name, value, modifier);
+			}
+
+			//	...
+			self.update();
 		});
 	};
 

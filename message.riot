@@ -1,5 +1,5 @@
 <riot-form-message>
-	<div if={ message } class="riot-form-message { status }">
+	<div if={ message } class="riot-form-message { status ? status:'hidden' }">
 		<div style="float:left;">
 			<riot-form-pre content={ message } />
 		</div>
@@ -16,6 +16,12 @@
 		padding: 1em;
 		font-weight: bold;
 		transition: all 300ms 0s ease;
+	}
+
+	:scope div.riot-form-message.hidden {
+		color:            #cccccc;
+		border-color:     #cccccc;
+		background-color: #cccccc;
 	}
 
 	:scope div.riot-form-message.success {
@@ -46,9 +52,15 @@
 	</style>
 	<script>
 	//	...
-	this.form    = this.opts.form    ? this.opts.form    : null;
-	this.result  = this.opts.result  ? this.opts.result  : null;
-	this.message = this.opts.message ? this.opts.message : null;
+	if( !this.opts.form || !this.opts.name ){
+		d(this.opts);
+		alert("Empty form name or message name. (riot/form/message.riot)");
+	}
+
+	//	...
+	this.form    = this.opts.form;
+	this.name    = this.opts.name;
+	this.message = null;
 	this.status  = null;
 
 	//	...
@@ -58,28 +70,25 @@
 	};
 
 	//	...
-	onStatus(){
-		if( this.result !== null ){
-			this.status  =  this.result ? 'success':'failed';
-		}
-	};
-
-	//	...
 	obs(){
 		var self = this;
-		obs.on('message', function(form, message, result){
+		obs.on('message', function(form, name, message, result){
 			if( form !== self.form ){
 				return;
 			}
 
+			if( name !== self.name ){
+				return;
+			}
+
 			//	...
-			self.result  = result ? true: false;
+			self.status  = result ? 'success':'failed';
 			self.message = message;
+			self.update();
 		});
 	};
 
 	//	...
 	setTimeout(this.obs, 0);
-	setTimeout(this.onStatus, 0);
 	</script>
 </riot-form-message>
