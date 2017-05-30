@@ -1,5 +1,5 @@
 <riot-form-textarea>
-	<textarea name="{ parent.opts.name }" class="{ error ? 'error':'' } { fixed !== value ? 'change':'' }" onChange={ onChange }>{ value }</textarea>
+	<textarea name="{ parent.opts.name }" class="{ error ? 'error':'' } { ( error !== true && fixed !== value) ? 'change':'' }" onChange={ onChange }>{ value }</textarea>
 	<style scoped>
 	:scope textarea {
 	}
