@@ -1,0 +1,14 @@
+<riot-back>
+	<div style="margin-top:1em;">
+		<button class="button" onclick={ onClick }> 戻る </button>
+	</div>
+	<script>
+	//	...
+	this.url = document.referrer;
+
+	//	...
+	onClick(){
+		window.location.href = this.url;
+	};
+	</script>
+</riot-back>
