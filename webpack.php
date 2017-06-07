@@ -36,6 +36,8 @@ if( isset($this) ){
 		//	...
 		$this->SetMime($mime);
 	}
+}else if( class_exists('Http') and method_exists('Http', 'Mime') ){
+	Http::Mime($mime);
 }else{
 	header("Content-type: {$mime}; charset={$charset}");
 }
