@@ -33,8 +33,11 @@
 				if( modifier === 'change' ){
 					self.post[name] = value;
 					setTimeout(function(){
-						var $temp = $('form[name="'+self.form+'"] .change:not(.error)');
-						self.count = $temp.length;
+						if( $('form[name="'+self.form+'"] .error').length ){
+							self.count = 0;
+						}else{
+							self.count = $('form[name="'+self.form+'"] .change:not(.error)').length;
+						}
 						self.update();
 					}, 200);
 				}
