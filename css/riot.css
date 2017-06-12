@@ -16,3 +16,7 @@ div.riot .error {
 div.riot .change:not(.error) {
 	background-color: #fcfc9c;
 }
+
+div.riot *:disabled {
+	color: blue;
+}

@@ -1,5 +1,5 @@
 <riot-form-select>
-	<select name="{ name }" onChange={ onChange } class="{ error ? 'error':'' } { select !== fixed ? 'change':'' }">
+	<select name="{ name }" onChange={ onChange } class="{ error ? 'error':'' } { select !== fixed ? 'change':'' }" disabled={ disabled }>
 		<option></option>
 		<option each={ values } value="{ value }" selected={ value === select }>{ label }</option>
 	</select>
@@ -23,6 +23,7 @@
 	this.values = this.opts.values ? this.opts.values: null;
 	this.fixed  = this.select !== null ? select: null;
 	this.error  = null;
+	this.disabled = null;
 
 	//	...
 	onChange(e){
@@ -46,7 +47,7 @@
 			}
 
 			//	...
-			if( name !== self.opts.name ){
+			if( name !== null && name !== self.opts.name ){
 				return;
 			}
 
@@ -68,6 +69,10 @@
 
 				case 'error':
 					self.error = value ? true: false;
+					break;
+
+				case 'disabled':
+					self.disabled = value;
 					break;
 
 				case 'submit':
