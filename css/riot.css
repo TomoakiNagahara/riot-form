@@ -20,3 +20,28 @@ div.riot .change:not(.error) {
 div.riot *:disabled {
 	color: blue;
 }
+
+div.table,
+div[role="table"] {
+	display: table;
+}
+
+div.tr,
+div[role="table"] > div {
+	display: table-row;
+}
+
+div.td,
+div[role="table"] > div > div {
+	display: table-cell;
+	vertical-align: top;
+}
+
+div.th,
+div[role="th"],
+div[role="table"] > div > div:nth-child(1) {
+	display: table-cell;
+	font-weight: bold;
+	text-align: center;
+	white-space: nowrap;
+}
