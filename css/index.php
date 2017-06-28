@@ -8,12 +8,14 @@
  * @author    Tomoaki Nagahara <tomoaki.nagahara@gmail.com>
  * @copyright Tomoaki Nagahara All right reserved.
  */
+//	...
+$theme = 'theme-'.isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING']: 'default';
 
 //	...
 $extension = 'css';
 
 //	...
-$files = array('riot');
+$files = array('riot', $theme);
 
 //	...
 include(__DIR__.'/../webpack.php');
