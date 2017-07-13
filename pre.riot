@@ -1,11 +1,12 @@
 <riot-form-pre>
-	<style scoped>
-	:scope div.pre {
-		_border: 1px solid black;
-	}
-	</style>
 	<script>
-	this.opts.content = this.opts.content ? this.opts.content.replace(/\n/g, '<br/>'): '';
-	this.root.innerHTML = '<div class="pre">' + this.opts.content + '</div>';
+	this.on('update', function(){
+		if( opts.content ){
+			opts.content = opts.content.replace(/</g, '&lt;');
+			opts.content = opts.content.replace(/>/g, '&gt;');
+			opts.content = opts.content.replace(/\n/g, '<br/>');
+			this.root.innerHTML = '<div class="pre">' + opts.content + '</div>';
+		}
+	});
 	</script>
 </riot-form-pre>
