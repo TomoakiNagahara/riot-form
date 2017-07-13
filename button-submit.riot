@@ -1,7 +1,13 @@
 <riot-form-button-submit>
-	<button class="button" onclick={ onClick } disabled={ count === 0 }>
-		{ value }
+	<button class="button { wait ? 'wait':'' }" onclick={ onClick } disabled={ wait || count === 0 }>
+		<span if={ !wait }>{ value }</span>
+		<i if={ wait } class="fa fa-spinner fa-pulse _fa-fw"></i>
 	</button>
+	<style scoped>
+	:scope button.wait {
+		cursor: progress;
+	}
+	</style>
 	<script>
 	//	...
 	if( !this.opts.form || !this.opts.name ){
@@ -14,9 +20,14 @@
 	this.value = this.opts.value;
 	this.count = 0;
 	this.post  = {};
+	this.wait  = null;
 
 	//	...
 	onClick(){
+		//	...
+		this.wait = true;
+
+		//	...
 		obs.trigger('form', this.form, this.name, true, 'submit');
 	};
 
@@ -24,6 +35,7 @@
 	obs(){
 		var self = this;
 		obs.on('form', function(form, name, value, modifier){
+			//	...
 			if( form !== self.form ){
 				return;
 			}
@@ -45,10 +57,16 @@
 			}
 
 			//	...
-			if( modifier === 'result' && value === true ){
-				self.count = 0;
-				for(var name in self.post ){
-					obs.trigger('form', self.form, name, true, 'submit');
+			if( modifier === 'result' ){
+				//	...
+				self.wait = false;
+
+				//	...
+				if( value === true ){
+					self.count = 0;
+					for(var name in self.post ){
+						obs.trigger('form', self.form, name, true, 'submit');
+					}
 				}
 			}
 		});
